@@ -23,29 +23,30 @@ fi
 cd $install_directory
 if [ ! -f $install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz ]
 then
-echo "---------------------------packag error or packag not exits-----------------------------"
-echo "---------------------------network download  input <y>no<n>-----------------------------"
-read download
-case $download in
-	y)
-	wget https://cdn.mysql.com//Downloads/MySQL-5.5/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz -P $install_directory
-	;;
-	n)
-	echo "---------------------------quit install-----------------------------"
-	exit
-	;;
-	*)
-	echo "-------------------------The input does not conform to the format-------------------------"
-	;;
-esac
-sleep 1
-MD5=`md5um  "$install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz" | awk '{print $1}'`
-if [ "$MD5" = "2df3a1fc8db6c99f8398ea544fc6328d" ] 
+	echo "---------------------------packag error or packag not exits-----------------------------"
+	echo "---------------------------network download  input <y>no<n>-----------------------------"
+	read download
+	case $download in
+		y)
+		wget https://cdn.mysql.com//Downloads/MySQL-5.5/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz -P $install_directory
+		;;
+		n)
+		echo "---------------------------quit install-----------------------------"
+		exit
+		;;
+		*)
+		echo "-------------------------The input does not conform to the format-------------------------"
+		;;
+	esac
+	sleep 1
+	MD5=`md5um  "$install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz" | awk '{print $1}'`
+elif [ "$MD5" = "2df3a1fc8db6c99f8398ea544fc6328d" ] 
 then
 echo "-----------------------------------packag ok ----------------------------------------"
 else
 echo "-----------------------------------packag error ----------------------------------------"
 wget https://cdn.mysql.com//Downloads/MySQL-5.5/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz -P $install_directory
+fi
 
 echo "------------------------------unpackaging mysql -----------------------------------"
 tar -xvf $install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz 
