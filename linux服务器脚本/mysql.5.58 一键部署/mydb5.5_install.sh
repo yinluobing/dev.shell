@@ -24,10 +24,29 @@ cd $install_directory
 if [ ! -f $install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz ]
 then
 echo "---------------------------packag error or packag not exits-----------------------------"
-else
+echo "---------------------------network download  input <y>no<n>-----------------------------"
+read download
+case $download in
+	y)
+	wget https://cdn.mysql.com//Downloads/MySQL-5.5/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz -P $install_directory
+	;;
+	n)
+	echo "---------------------------quit install-----------------------------"
+	exit
+	;;
+	*)
+	echo "-------------------------The input does not conform to the format-------------------------"
+	;;
+esac
 sleep 1
+MD5=`md5um  "$install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz" | awk '{print $1}'`
+if [ "$MD5" = "2df3a1fc8db6c99f8398ea544fc6328d" ] 
+then
 echo "-----------------------------------packag ok ----------------------------------------"
-fi
+else
+echo "-----------------------------------packag error ----------------------------------------"
+wget https://cdn.mysql.com//Downloads/MySQL-5.5/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz -P $install_directory
+
 echo "------------------------------unpackaging mysql -----------------------------------"
 tar -xvf $install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz 
 mv mysql-5.5.58-linux-glibc2.12-x86_64  mysql-5.5.58
@@ -100,8 +119,8 @@ grant all privileges on *.* to 'root'@'%' identified by '123456';
 flush privileges;
 quit
 EOF
-DATE=`data +"%H:%M:%S"`
-IP=`/sbin/ifconfig eth1 | awk '/inet addr/ {print $2}' | cut -d: -f2`
+DATE=`date +"%H:%M:%S"`
+IP=`/sbin/ifconfig eth0 | awk '/inet addr/ {print $2}' | cut -d: -f2`
 echo "$DATE IP:$IP" >>$install_directory/install_`date +"%Y%m%d"`.log
 echo "$DATE datadir:$install_directory/data" >>$install_directory/install_`date +"%Y%m%d"`.log
 echo "$DATE basedir:$install_directory" >>$install_directory/install_`date +"%Y%m%d"`.log
@@ -135,7 +154,7 @@ echo "-------------------Uninstall completed----------------------"
 }
 function main(){
 echo "------------------------- <install>or<uninstall> ---------------------"
-#read cmd
+read cmd
 source install.cnf
 case $cmd in
 	install | begin)
