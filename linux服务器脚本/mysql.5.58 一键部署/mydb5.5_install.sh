@@ -1,6 +1,17 @@
 #! /bin/bash
 #mysql5.5 二进制版本安装脚本
 #
+function check_md5(){
+
+if [ "$1" = "2df3a1fc8db6c99f8398ea544fc6328d" ] 
+then
+echo "-----------------------------------packag ok ----------------------------------------"
+else
+echo "-----------------------------------packag error pleas reinstall ----------------------------------------"
+exit
+
+fi
+}
 function install(){	
 
 if [ -f /etc/my.cnf ] || [ -s /etc/my.cnf];then
@@ -21,33 +32,34 @@ then
 mkdir -p $install_directory
 fi
 cd $install_directory
+#判断安装包是否存在
 if [ ! -f $install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz ]
 then
-	echo "---------------------------packag error or packag not exits-----------------------------"
-	echo "---------------------------network download  input <y>no<n>-----------------------------"
-	read download
-	case $download in
-		y)
-		wget https://cdn.mysql.com//Downloads/MySQL-5.5/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz -P $install_directory
-		;;
-		n)
-		echo "---------------------------quit install-----------------------------"
-		exit
-		;;
-		*)
-		echo "-------------------------The input does not conform to the format-------------------------"
-		;;
-	esac
-	sleep 1
-	MD5=`md5um  "$install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz" | awk '{print $1}'`
-elif [ "$MD5" = "2df3a1fc8db6c99f8398ea544fc6328d" ] 
-then
-echo "-----------------------------------packag ok ----------------------------------------"
+echo "---------------------------packag error or packag not exits-----------------------------"
+echo "---------------------------network download  input <y>no<n>-----------------------------"
+read download
+case $download in
+	y)
+	wget https://cdn.mysql.com//Downloads/MySQL-5.5/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz -P $install_directory
+	c
+	;;
+	n)
+	echo "---------------------------quit install-----------------------------"
+	exit
+	;;
+	*)
+	echo "-------------------------The input does not conform to the format-------------------------"
+	;;
+esac
+sleep 1
 else
-echo "-----------------------------------packag error ----------------------------------------"
-wget https://cdn.mysql.com//Downloads/MySQL-5.5/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz -P $install_directory
+echo "-----------------------------------packag exist----------------------------------------"
 fi
-
+#检查安装包MD5值
+MD5=`md5sum  "$install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz" | awk '{print $1}'`	
+check_md5 $MD5
+#断点测试
+#sleep 100 
 echo "------------------------------unpackaging mysql -----------------------------------"
 tar -xvf $install_directory/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz 
 mv mysql-5.5.58-linux-glibc2.12-x86_64  mysql-5.5.58
