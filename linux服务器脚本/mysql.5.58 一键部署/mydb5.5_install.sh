@@ -41,7 +41,6 @@ read download
 case $download in
 	y)
 	wget https://cdn.mysql.com//Downloads/MySQL-5.5/mysql-5.5.58-linux-glibc2.12-x86_64.tar.gz -P $install_directory
-	c
 	;;
 	n)
 	echo "---------------------------quit install-----------------------------"
