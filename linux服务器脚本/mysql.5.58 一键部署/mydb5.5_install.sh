@@ -139,6 +139,9 @@ echo "$DATE basedir:$install_directory" >>$install_directory/install_`date +"%Y%
 echo "$DATE port:$PORTSIZE" >>$install_directory/install_`date +"%Y%m%d"`.log
 echo "$DATE user:root" >>$install_directory/install_`date +"%Y%m%d"`.log
 echo "$DATE passwd:123456" >>$install_directory/install_`date +"%Y%m%d"`.log
+echo "-------------------install completed----------------------"
+cat "$install_directory/install_`date +"%Y%m%d"`.log"
+
 fi
 }
 
@@ -165,16 +168,17 @@ echo "-------------------Uninstall completed----------------------"
 
 }
 function main(){
-echo "------------------------- <install>or<uninstall> ---------------------"
+echo "-------------1 for installation 2 for uninstallation--------------"
+echo "------------------------- <1>or<2> ---------------------"
 read cmd
 source install.cnf
 case $cmd in
-	install | begin)
+	1 | begin)
 	echo "Please enter the installation path   示例:/opt "
 	#read install_directory
 	install
 	;;
-	uninstall | end)
+	2 | end)
 	uninstall
 	;;
 	*)
