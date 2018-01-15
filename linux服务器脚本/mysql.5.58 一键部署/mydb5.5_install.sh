@@ -131,6 +131,15 @@ grant all privileges on *.* to 'root'@'%' identified by '123456';
 flush privileges;
 quit
 EOF
+
+#关闭防火墙
+echo "-------------------iptables off-------------------"
+service iptables status
+service iptables stop
+#关闭SElinux
+echo "-------------------selinux off-------------------"
+setenforce 0
+
 DATE=`date +"%H:%M:%S"`
 IP=`/sbin/ifconfig eth0 | awk '/inet addr/ {print $2}' | cut -d: -f2`
 echo "$DATE IP:$IP" >>$install_directory/install_`date +"%Y%m%d"`.log
