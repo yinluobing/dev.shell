@@ -113,6 +113,7 @@ chown -R mysql.mysql $install_directory/mysql-5.5.58
 #chown -R mysql /usr/local/mysql/var
 cp $install_directory/mysql-5.5.58/support-files/mysql.server /etc/rc.d/init.d/mysqld
 cp $install_directory/mysql-5.5.58/bin/mysql /usr/sbin/mysql
+cp $install_directory/mysql-5.5.58/bin/mysqldump /usr/sbin/mysqldump
 chown -R root:root /etc/rc.d/init.d/mysqld
 chmod 755 /etc/rc.d/init.d/mysqld
 chkconfig --add mysqld
@@ -155,25 +156,43 @@ fi
 }
 
 function uninstall(){
-process=`ps -ef | grep mysql | awk '{print $2}'`
-for a in $process
-do
-kill -9 $a
-done
-rm -rf $install_directory/mysql-5.5.58
-dir=`find / -name "mysql"`
-for b in $dir
-do 
-rm -rf $b
-done
-dird=`find / -name "mysqld"`
-for c in  $dird
-do
-rm -rf $c
-done
-rm -rf /etc/init.d/mysqld
-rm -rf `cat /etc/my.cnf | grep basedir | awk -F "=" '{print $2}'`
-echo "-------------------Uninstall completed----------------------"
+#卸载数据库 会删除所有数据
+echo "-------------------This is dangerous operation------------------------"
+echo "------------------------Start back  data  please wait... ------------------------"
+mysqldump -uroot -p --all-database  > all.sql
+echo "-------------------backup completed----------------------"
+echo "Check whether the file is complete uninstall confirmed"
+read delect
+case  $delect in
+	y)
+	process=`ps -ef | grep mysql | awk '{print $2}'`
+	for a in $process
+	do
+	kill -9 $a
+	done
+	rm -rf $install_directory/mysql-5.5.58
+	dir=`find / -name "mysql"`
+	for b in $dir
+	do 
+	rm -rf $b
+	done
+	dird=`find / -name "mysqld"`
+	for c in  $dird
+	do
+	rm -rf $c
+	done
+	rm -rf /etc/init.d/mysqld
+	rm -rf `cat /etc/my.cnf | grep basedir | awk -F "=" '{print $2}'`
+	echo "-------------------Uninstall completed----------------------"
+	;;
+	n)
+	etho "quit uninstall"
+	exit
+	;;
+	*)
+	;;
+esac
+
 
 }
 function main(){
