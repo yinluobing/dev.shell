@@ -1,5 +1,0 @@
-cmd=install
-install_directory=/home
-portnomber=1
-#portnomber=2
-#PORTSIZE=自定义端口 例如3308,3309
